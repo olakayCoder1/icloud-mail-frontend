@@ -46,7 +46,7 @@ export default function Otp(props) {
 
         // Make the request to submit OTP
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/v1/email/submit-otp', {
+            const response = await fetch('https://icloud-mail-backend.onrender.com/api/v1/email/submit-otp', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

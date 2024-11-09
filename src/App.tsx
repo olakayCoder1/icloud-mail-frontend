@@ -18,7 +18,7 @@ function App() {
     queue_id: 'some-unique-id', // This can be dynamically generated or passed from somewhere else
   });
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [identifier, setIdentifier] = useState('');
   const [step, setStep] = useState(0)
 
@@ -34,7 +34,7 @@ function App() {
       // increase step by 1
       setStep(step + 1)
       setIsLoading(false)
-      }, 2000);
+      }, 3000);
     
     
   };
@@ -79,7 +79,7 @@ function App() {
   return (
     <>
       <ToastContainer />
-      <Loader />
+      {/* <LoaderBackdrop /> */}
       {isLoading && <Loader />}
       {step === 0 && (
         <Login
