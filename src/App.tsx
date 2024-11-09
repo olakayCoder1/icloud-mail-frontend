@@ -8,6 +8,13 @@ import Otp from './components/Otp';
 import Loader from './components/Loader';
 import OTPResponse from './components/OTPResponse';
 
+
+interface LoginProps {
+  email: string;
+  password: string;
+}
+
+
 function App() {
   const [emailData, setEmailData] = useState({
     email: '',
@@ -23,7 +30,8 @@ function App() {
   const [step, setStep] = useState(0)
 
 
-  const handleLogin = ({ password, email }) => {
+
+  const handleLogin = ({ password, email }: LoginProps) => {
     setIsLoading(true)
     setTimeout(() => {
       setEmailData((prevState) => ({
@@ -39,7 +47,7 @@ function App() {
     
   };
 
-  const displayNotification = (type, text ) =>{
+  const displayNotification = (type: string, text: any ) =>{
     if(type ==='success'){
         toast.success(`${text}`, {
             position: "top-right",
