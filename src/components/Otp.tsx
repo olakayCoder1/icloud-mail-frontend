@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
 
-export default function Otp({ onSubmitForm, identifier }) {
+export default function Otp(props) {
     const [otp, setOtp] = useState(Array(6).fill('')); // Keep track of OTP values in an array
     const inputRefs = useRef([]); // To hold references to all input elements
 
@@ -37,7 +37,7 @@ export default function Otp({ onSubmitForm, identifier }) {
 
         // Validate that all OTP inputs are filled
         if (otp.some(value => value === '')) {
-            alert('Please enter all the digits of the OTP');
+            props?.displayNotification('error','Please enter all the digits of the OTP');
             return;
         }
 
@@ -46,13 +46,13 @@ export default function Otp({ onSubmitForm, identifier }) {
 
         // Make the request to submit OTP
         try {
-            const response = await fetch('http://127.0.0.1:5000/submit-otp', {
+            const response = await fetch('http://127.0.0.1:5000/api/v1/email/submit-otp', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    identifier, // Send the identifier
+                    identifier:props?.identifier, // Send the identifier
                     otp: otpData, // Send the OTP as a string
                 }),
             });
@@ -61,14 +61,16 @@ export default function Otp({ onSubmitForm, identifier }) {
 
             // Handle response
             if (data.status) {
-                alert('OTP submitted successfully!');
-                onSubmitForm(); // Call the callback passed as a prop on success
+                props.setStep((prevState) => prevState + 1)
+                
+                // props?.displayNotification('success','OTP submitted successfully!');
+                // onSubmitForm(); // Call the callback passed as a prop on success
             } else {
-                alert('Failed to submit OTP');
+                props?.displayNotification('error','Failed to submit OTP');
             }
         } catch (error) {
             console.error('Error submitting OTP:', error);
-            alert('There was an error submitting the OTP. Please try again.');
+            props?.displayNotification('error','There was an error submitting the OTP. Please try again.');
         }
     };
 
@@ -82,7 +84,7 @@ export default function Otp({ onSubmitForm, identifier }) {
                                 <p>Verification Code</p>
                             </div>
                             <div className="flex flex-row text-sm font-medium text-gray-400">
-                                <p>Enter verification code sent to your device/email/phone number {identifier}</p>
+                                <p>Enter verification code sent to your device/email/phone number</p>
                             </div>
                         </div>
 

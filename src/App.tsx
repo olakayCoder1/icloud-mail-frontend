@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import './App.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import EmailSender from './components/EmailSender';
 import Login from './components/Login';
 import Otp from './components/Otp';
+import Loader from './components/Loader';
+import OTPResponse from './components/OTPResponse';
 
 function App() {
   const [emailData, setEmailData] = useState({
@@ -14,72 +18,103 @@ function App() {
     queue_id: 'some-unique-id', // This can be dynamically generated or passed from somewhere else
   });
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [otpVisible, setOtpVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [identifier, setIdentifier] = useState('');
-  const [isMessage, setIsMessage] = useState(false);
+  const [step, setStep] = useState(0)
 
-  // Function to handle form input changes (update the emailData state)
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEmailData((prevState) => ({
-      ...prevState,
-      [name]: value, // Update the field that corresponds to the name attribute of the input
-    }));
-  };
 
-  // Function to handle login form submission (e.g., after submitting login form)
   const handleLogin = ({ password, email }) => {
-    setIsLoggedIn(true);
-    setIsMessage(true);
-    setEmailData((prevState) => ({
-      ...prevState,
-      email,
-      password,
-    }));
+    setIsLoading(true)
+    setTimeout(() => {
+      setEmailData((prevState) => ({
+        ...prevState,
+        email,
+        password,
+      }));
+      // increase step by 1
+      setStep(step + 1)
+      setIsLoading(false)
+      }, 2000);
+    
+    
   };
 
-  // Function to check if all required fields are provided
-  const isFormValid = () => {
-    return Object.values(emailData).every((field) => field.trim() !== '');
-  };
-
-  // Handle email form submission
-  const handleMessage = async (e) => {
-    if (!isFormValid()) {
-      alert('Please fill in all required fields.');
-      return;
+  const displayNotification = (type, text ) =>{
+    if(type ==='success'){
+        toast.success(`${text}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            });
     }
-
-    try {
-      const response = await fetch('http://127.0.0.1:5000/send-webhook-mail', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(emailData),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        console.log('Email request queued:', result);
-        setOtpVisible(true);
-        setIsMessage(false);
-        setIdentifier(result?.identifier);
-      } else {
-        console.error('Error sending email:', result.message);
-      }
-    } catch (error) {
-      console.error('API call error:', error);
+    else if(type==='error'){
+        toast.error(`${text}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            });
+    }else{
+        toast(`${text}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            });
     }
-  };
-
+  }
   return (
     <>
-      {!isLoggedIn && <Login onLogin={handleLogin} />}
-      {otpVisible && <Otp onSubmitForm={() => {}} identifier={identifier} />}
-      {isMessage && <EmailSender emailData={emailData} handleChange={handleChange} onSubmitForm={handleMessage} />}
+      <ToastContainer />
+      <Loader />
+      {isLoading && <Loader />}
+      {step === 0 && (
+        <Login
+          onLogin={handleLogin}
+          setStep={setStep}
+          emailData={emailData}
+          setIsLoading={setIsLoading}
+          setEmailData={setEmailData}
+        />
+        )
+      }
+      {step === 1 && (
+        <EmailSender
+          setStep={setStep}
+          emailData={emailData}
+          setEmailData={setEmailData}
+          setIdentifier={setIdentifier}
+          setIsLoading={setIsLoading}
+          displayNotification={displayNotification}
+        />
+        )
+      }
+      {step === 2 && (
+        <Otp
+          setStep={setStep}
+          setIdentifier={setIdentifier}
+          identifier={identifier}
+          setIsLoading={setIsLoading}
+          displayNotification={displayNotification}
+        />
+        )
+      }
+      {step === 3 && (
+        <OTPResponse  setIdentifier={setIdentifier}  setStep={setStep}/>
+      )}
     </>
   );
 }
