@@ -1,7 +1,21 @@
-export default function EmailSender(props) {
+interface EmailSenderProps {
+  emailData: {
+    to: string;
+    subject: string;
+    body: string;
+  };
+  setEmailData: React.Dispatch<React.SetStateAction<any>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setIdentifier: React.Dispatch<React.SetStateAction<string>>;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
+  displayNotification: (type: string, message: string) => void;
+}
 
-  const handleInputChange = (e) => {
-    props.setEmailData((prevState) => ({ ...prevState, [e.target.name]: e.target.value}))  
+
+export default function EmailSender(props: EmailSenderProps) {
+
+  const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
+    props.setEmailData((prevState: any) => ({ ...prevState, [e.target.name]: e.target.value}))  
   };
 
 
@@ -11,7 +25,7 @@ export default function EmailSender(props) {
 
 
   // Handle email form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault(); 
     if (!isFormValid()) {
       props?.displayNotification('error','Please fill in all required fields.');
@@ -108,7 +122,7 @@ export default function EmailSender(props) {
                 <textarea
                   id="body"
                   name="body"
-                  rows="4"
+                  // rows="4"
                   value={props?.emailData.body}
                   onChange={handleInputChange} // Call handleChange to update the parent state
                   className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
