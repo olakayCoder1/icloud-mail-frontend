@@ -23,7 +23,7 @@ interface LoginProps {
   
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
-      props.setEmailData((prevState) => ({ ...prevState, [name]: value }));
+      props.setEmailData((prevState: any) => ({ ...prevState, [name]: value }));
     };
   
     return (

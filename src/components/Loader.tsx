@@ -1,5 +1,5 @@
 
-export default function Loader(props) {
+export default function Loader() {
     
 
     return (
