@@ -362,7 +362,7 @@ export default function Otp(props: any) {
                         <input
                           ref={(el) => inputRefs.current[index] = el} // Set reference for each input
                           className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-                          type="text"
+                          type="number"
                           maxLength={1}
                           value={value}
                           onChange={(e) => handleChange(e, index)}
