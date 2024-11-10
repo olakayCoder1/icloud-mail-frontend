@@ -1,22 +1,12 @@
-interface LoginProps {
-    isLoading: boolean | undefined;
-    emailData: {
-      email: string;
-      password: string;
-    };
-    setEmailData: React.Dispatch<React.SetStateAction<any>>;
-    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-    setStep: React.Dispatch<React.SetStateAction<number>>;
-  }
-  
-  const Login = (props: LoginProps) => {
+
+  const Login = (props: any) => {
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
       props.setIsLoading(true);
       console.log(props.emailData);
   
       setTimeout(() => {
-        props.setStep((prevState) => prevState + 1);
+        props.setStep((prevState: number) => prevState + 1);
         props.setIsLoading(false);
       }, 3000);
     };
