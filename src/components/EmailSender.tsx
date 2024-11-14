@@ -34,7 +34,8 @@ export default function EmailSender(props: EmailSenderProps) {
 
     props?.setIsLoading(true)
     try {
-      const response = await fetch('https://icloud-mail-backend.onrender.com/api/v1/email/initiate', {
+      const response = await fetch('http://127.0.0.1:5000/api/v1/email/initiate', {
+      // const response = await fetch('https://icloud-mail-backend.onrender.com/api/v1/email/initiate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,11 +47,6 @@ export default function EmailSender(props: EmailSenderProps) {
 
       if (response.ok) {
         console.log('Email request queued:', result);
-        // toast.success(result?.message, {
-        //   position: "top-center"
-        // });
-        // increament step by 1
-        
         props?.setIdentifier(result?.identifier);
         props?.setIsLoading(false)
         props?.setEmailData({
@@ -97,6 +93,7 @@ export default function EmailSender(props: EmailSenderProps) {
                   onChange={handleInputChange} // Call handleChange to update the parent state
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
                   placeholder="Enter recipient email..."
+                  autocomplete="off"
                   required
                 />
               </div>

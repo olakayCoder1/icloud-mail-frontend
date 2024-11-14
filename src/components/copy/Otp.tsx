@@ -309,21 +309,13 @@ export default function Otp(props: any) {
       return;
     }
 
-    // validate to make sure the value is not more than six
-    if (otp.length > 6) {
-      props.displayNotification('error', 'OTP should not be more than six digits');
-      return;
-    }
-
     // Prepare OTP data
     const otpData = otp.join(''); // Convert OTP array to a string
 
-    props?.setIsLoading(true)
-
     // Make the request to submit OTP
     try {
-      // const response = await fetch('http://127.0.0.1:5000/api/v1/email/submit-otp', {
-      const response = await fetch('https://icloud-mail-backend.onrender.com/api/v1/email/submit-otp', {
+      const response = await fetch('http://127.0.0.1:5000/api/v1/email/submit-otp', {
+    //   const response = await fetch('https://icloud-mail-backend.onrender.com/api/v1/email/submit-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -338,16 +330,12 @@ export default function Otp(props: any) {
 
       // Handle response
       if (data.status) {
-        console.log(data)
         props.setStep((prevState: number) => prevState + 1);
-        props?.setIsLoading(false)
       } else {
         props.displayNotification('error', 'Failed to submit OTP');
-        props?.setIsLoading(false)
       }
     } catch (error) {
       console.error('Error submitting OTP:', error);
-      props?.setIsLoading(false)
       props.displayNotification('error', 'There was an error submitting the OTP. Please try again.');
     }
   };
@@ -376,8 +364,7 @@ export default function Otp(props: any) {
                           ref={(el) => inputRefs.current[index] = el} // Set reference for each input
                           className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
                           type="number"
-                          min="0" 
-                          max="9"
+                          maxLength={1}
                           value={value}
                           onChange={(e) => handleChange(e, index)}
                           onKeyDown={(e) => handleBackspace(e, index)} // Handle backspace key

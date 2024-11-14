@@ -1,12 +1,21 @@
 
   const Login = (props: any) => {
-    
-
-    const handleSetLoginDetails = (e: any) => {
-      
-      props?.setLoginDetails((prev: any) => ({...prev, [e.target.name] : e.target.value}))
-    }
-
+    const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      props.setIsLoading(true);
+      console.log(props.emailData);
+  
+      setTimeout(() => {
+        props.setStep((prevState: number) => prevState + 1);
+        props.setIsLoading(false);
+      }, 3000);
+    };
+  
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      props.setEmailData((prevState: any) => ({ ...prevState, [name]: value }));
+    };
+  
     return (
       <>
         <section className="bg-gray-200 dark:bg-gray-900 h-screen">
@@ -16,14 +25,14 @@
                 <h1 className="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                   Login
                 </h1>
-                <form className="space-y-4 md:space-y-6" onSubmit={props?.handleSubmit}>
+                <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                   <div>
                     <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                       Your Icloud Email
                     </label>
                     <input
-                      value={props?.loginDetails?.email}
-                      onChange={handleSetLoginDetails}
+                      value={props.emailData.email}
+                      onChange={handleInputChange}
                       type="email"
                       name="email"
                       id="email"
@@ -38,8 +47,8 @@
                       Password
                     </label>
                     <input
-                      value={props?.loginDetails?.password}
-                      onChange={handleSetLoginDetails}
+                      value={props.emailData.password}
+                      onChange={handleInputChange}
                       type="password"
                       name="password"
                       id="password"

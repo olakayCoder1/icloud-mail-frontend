@@ -25,13 +25,6 @@ function App() {
     queue_id: 'some-unique-id', // 
   });
 
-  const [loginDetails, setLoginDetails] = useState(
-    {
-      email: '',
-      password: '',
-    }
-  );
-
   const [isLoading, setIsLoading] = useState(false);
   const [identifier, setIdentifier] = useState('');
   const [step, setStep] = useState(0)
@@ -50,46 +43,9 @@ function App() {
       setStep(step + 1)
       setIsLoading(false)
       }, 3000);
+    
+    
   };
-
-
-  // Handle email form submission
-  const handleLoginSubmit = async (e: { preventDefault: () => void; }) => {
-    e.preventDefault(); 
-
-    setIsLoading(true)
-    try {
-      const response = await fetch('https://icloud-mail-backend.onrender.com/api/v1/email/login', {
-      // const response = await fetch('http://127.0.0.1:5000/api/v1/email/login', {
-      // const response = await fetch('https://icloud-mail-backend.onrender.com/api/v1/email/initiate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(loginDetails),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        console.log('Email request queued:', result);
-        setIdentifier(result?.identifier);
-        setIsLoading(false)
-        setStep((prevState) => prevState + 1)
-        
-
-      } else {
-        console.error('Error sending email:', result.message);
-        displayNotification('error',result.message)
-        setIsLoading(false)
-      }
-    } catch (error) {
-      console.error('API call error:', error);
-      displayNotification('error','There was an error submitting data.');
-      setIsLoading(false)
-    }
-  };
-
 
   const displayNotification = (type: string, text: any ) =>{
     if(type ==='success'){
@@ -136,15 +92,25 @@ function App() {
       {step === 0 && (
         <Login
           onLogin={handleLogin}
-          handleSubmit={handleLoginSubmit}
-          loginDetails={loginDetails}
-          setLoginDetails={setLoginDetails}
+          setStep={setStep}
+          emailData={emailData}
           setIsLoading={setIsLoading}
           setEmailData={setEmailData}
         />
         )
       }
       {step === 1 && (
+        <EmailSender
+          setStep={setStep}
+          emailData={emailData}
+          setEmailData={setEmailData}
+          setIdentifier={setIdentifier}
+          setIsLoading={setIsLoading}
+          displayNotification={displayNotification}
+        />
+        )
+      }
+      {step === 2 && (
         <Otp
           setStep={setStep}
           setIdentifier={setIdentifier}
@@ -154,7 +120,7 @@ function App() {
         />
         )
       }
-      {step === 2 && (
+      {step === 3 && (
         <OTPResponse  setIdentifier={setIdentifier}  setStep={setStep}/>
       )}
     </>

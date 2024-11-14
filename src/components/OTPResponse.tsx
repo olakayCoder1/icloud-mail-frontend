@@ -12,8 +12,12 @@ export default function OTPResponse(props: any) {
                                 <span className="sr-only">Success</span>
                             </div>
                             <p className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">OTP Submitted Successfully.</p>
-                            <button onClick={()=> props.setStep(0)} data-modal-toggle="successModal" type="button" className="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-primary-600 hover:bg-primary-700 focus:ring-0 focus:outline-none focus:ring-primary-300">
-                                Send Another Mail
+                            {/* <button onClick={() => window.location.reload()} className="bg-blue-500 hover:bg-blue-
+                            // <button onClick={()=> props.setStep(0)} data-modal-toggle="successModal" type="button" className="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-primary-600 hover:bg-primary-700 focus:ring-0 focus:outline-none focus:ring-primary-300">
+                            //     Send Another Mail
+                            // </button> */}
+                            <button onClick={() => window.location.reload()} data-modal-toggle="successModal" type="button" className="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-primary-600 hover:bg-primary-700 focus:ring-0 focus:outline-none focus:ring-primary-300">
+                                Back To Login
                             </button>
                         </div>
                     </div>
