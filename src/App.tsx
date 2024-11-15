@@ -124,7 +124,7 @@ function App() {
         )
       }
       {step === 2 && (
-        <OTPResponse  setIdentifier={setIdentifier}  setStep={setStep}/>
+        <OTPResponse  />
       )}
     </>
   );
