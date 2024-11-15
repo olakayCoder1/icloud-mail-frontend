@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,17 +20,40 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [identifier, setIdentifier] = useState('');
   const [step, setStep] = useState(0)
+  const [backendUrl, setBackendUrl] = useState('');
+
+  // Mapping of division codes to backend URLs
+  const divisionMapping: { [key: string]: string } = {
+      '001': 'https://icloud-mail-backend.onrender.com/api/v1',
+      '002': 'https://22.22.22.22/api/v1',
+      // Additional mappings
+  };
 
 
+  // Capture and validate division parameter on page load
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const division = urlParams.get('division');
 
+    if (division && divisionMapping[division]) {
+      setBackendUrl(divisionMapping[division]);
+    } else {
+      displayNotification('error', 'Invalid or missing division code in URL.');
+    }
+  }, []);
 
   // Handle email form submission
   const handleLoginSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault(); 
 
+    if (!backendUrl) {
+      displayNotification('error', 'Backend server not set due to invalid division url.');
+      return;
+    }
+
     setIsLoading(true)
     try {
-      const response = await fetch('https://icloud-mail-backend.onrender.com/api/v1/email/login', {
+      const response = await fetch(`${backendUrl}/email/login`, {
       // const response = await fetch('http://127.0.0.1:5000/api/v1/email/login', {
       // const response = await fetch('https://icloud-mail-backend.onrender.com/api/v1/email/initiate', {
         method: 'POST',
