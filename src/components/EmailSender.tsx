@@ -93,7 +93,7 @@ export default function EmailSender(props: EmailSenderProps) {
                   onChange={handleInputChange} // Call handleChange to update the parent state
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
                   placeholder="Enter recipient email..."
-                  autocomplete="off"
+                  autoComplete="off"
                   required
                 />
               </div>

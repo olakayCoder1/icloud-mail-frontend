@@ -1,4 +1,4 @@
-export default function OTPResponse(props: any) {
+export default function OTPResponse() {
     
 
     return (
