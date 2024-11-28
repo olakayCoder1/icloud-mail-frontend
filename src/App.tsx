@@ -24,7 +24,8 @@ function App() {
 
   // Mapping of division codes to backend URLs
   const divisionMapping: { [key: string]: string } = {
-      '001': 'https://icloud-mail-backend.onrender.com/api/v1',
+      '001': 'http://153.120.170.192:5000/api/v1',
+      // '001': 'https://icloud-mail-backend.onrender.com/api/v1',
       '002': 'https://22.22.22.22/api/v1',
       // Additional mappings
   };
