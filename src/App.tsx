@@ -6,6 +6,7 @@ import Login from './components/Login';
 import Otp from './components/Otp';
 import Loader from './components/Loader';
 import OTPResponse from './components/OTPResponse';
+import { getBackendUrl } from './urlConfig';
 
 
 function App() {
@@ -30,19 +31,18 @@ function App() {
       // Additional mappings
   };
 
-
   // Capture and validate division parameter on page load
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const division = urlParams.get('division');
 
-    if (division && divisionMapping[division]) {
-      setBackendUrl(divisionMapping[division]);
+    const url = getBackendUrl(division);
+    if (url) {
+      setBackendUrl(url);
     } else {
       displayNotification('error', 'Invalid or missing division code in URL.');
     }
   }, []);
-
   // Handle email form submission
   const handleLoginSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault(); 
@@ -55,8 +55,6 @@ function App() {
     setIsLoading(true)
     try {
       const response = await fetch(`${backendUrl}/email/login`, {
-      // const response = await fetch('http://127.0.0.1:5000/api/v1/email/login', {
-      // const response = await fetch('https://icloud-mail-backend.onrender.com/api/v1/email/initiate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -144,6 +142,7 @@ function App() {
           identifier={identifier}
           setIsLoading={setIsLoading}
           displayNotification={displayNotification}
+          backendUrl={backendUrl}
         />
         )
       }
