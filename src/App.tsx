@@ -8,51 +8,44 @@ import Loader from './components/Loader';
 import OTPResponse from './components/OTPResponse';
 import { getBackendUrl } from './urlConfig';
 
-
 function App() {
-
-  const [loginDetails, setLoginDetails] = useState(
-    {
-      email: '',
-      password: '',
-    }
-  );
+  const [loginDetails, setLoginDetails] = useState({
+    email: '',
+    password: '',
+  });
 
   const [isLoading, setIsLoading] = useState(false);
   const [identifier, setIdentifier] = useState('');
-  const [step, setStep] = useState(0)
+  const [step, setStep] = useState(0);
   const [backendUrl, setBackendUrl] = useState('');
-
-  // Mapping of division codes to backend URLs
-  const divisionMapping: { [key: string]: string } = {
-      '001': 'http://153.120.170.192:5000/api/v1',
-      // '001': 'https://icloud-mail-backend.onrender.com/api/v1',
-      '002': 'https://22.22.22.22/api/v1',
-      // Additional mappings
-  };
 
   // Capture and validate division parameter on page load
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const division = urlParams.get('division');
 
-    const url = getBackendUrl(division);
-    if (url) {
-      setBackendUrl(url);
+    if (division) {
+      const url = getBackendUrl(division);
+      if (url) {
+        setBackendUrl(url);
+      } else {
+        displayNotification('error', 'Invalid or missing division code in URL.');
+      }
     } else {
-      displayNotification('error', 'Invalid or missing division code in URL.');
+      displayNotification('error', 'Division code is missing in URL.');
     }
   }, []);
+
   // Handle email form submission
-  const handleLoginSubmit = async (e: { preventDefault: () => void; }) => {
-    e.preventDefault(); 
+  const handleLoginSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
     if (!backendUrl) {
-      displayNotification('error', 'Backend server not set due to invalid division url.');
+      displayNotification('error', 'Backend server not set due to invalid division URL.');
       return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       const response = await fetch(`${backendUrl}/email/login`, {
         method: 'POST',
@@ -67,64 +60,43 @@ function App() {
       if (response.ok) {
         console.log('Email request queued:', result);
         setIdentifier(result?.identifier);
-        setIsLoading(false)
-        setStep((prevState) => prevState + 1)
-        
-
+        setStep((prevState) => prevState + 1);
       } else {
         console.error('Error sending email:', result.message);
-        displayNotification('error',result.message)
-        setIsLoading(false)
+        displayNotification('error', result.message);
       }
     } catch (error) {
       console.error('API call error:', error);
-      displayNotification('error','There was an error submitting data.');
-      setIsLoading(false)
+      displayNotification('error', 'There was an error submitting data.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  const displayNotification = (type: string, text: any) => {
+    const options = {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    };
 
-  const displayNotification = (type: string, text: any ) =>{
-    if(type ==='success'){
-        toast.success(`${text}`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            });
+    if (type === 'success') {
+      toast.success(text, options);
+    } else if (type === 'error') {
+      toast.error(text, options);
+    } else {
+      toast(text, options);
     }
-    else if(type==='error'){
-        toast.error(`${text}`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            });
-    }else{
-        toast(`${text}`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            });
-    }
-  }
+  };
+
   return (
     <>
       <ToastContainer />
-      {/* <LoaderBackdrop /> */}
       {isLoading && <Loader />}
       {step === 0 && (
         <Login
@@ -133,8 +105,7 @@ function App() {
           setLoginDetails={setLoginDetails}
           setIsLoading={setIsLoading}
         />
-        )
-      }
+      )}
       {step === 1 && (
         <Otp
           setStep={setStep}
@@ -144,11 +115,8 @@ function App() {
           displayNotification={displayNotification}
           backendUrl={backendUrl}
         />
-        )
-      }
-      {step === 2 && (
-        <OTPResponse  />
       )}
+      {step === 2 && <OTPResponse />}
     </>
   );
 }
