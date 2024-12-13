@@ -7,6 +7,7 @@ import Otp from './components/Otp';
 import Loader from './components/Loader';
 import OTPResponse from './components/OTPResponse';
 import { getBackendUrl } from './urlConfig';
+import PageNotFound from './components/PageNotFound';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
   );
 
   const [isLoading, setIsLoading] = useState(false);
+  const [is404, setIs404] = useState(false);
   const [identifier, setIdentifier] = useState('');
   const [step, setStep] = useState(0)
   const [backendUrl, setBackendUrl] = useState('');
@@ -32,6 +34,7 @@ function App() {
     if (url) {
       setBackendUrl(url);
     } else {
+      setIs404(true)
       displayNotification('error', 'Invalid or missing division code in URL.');
     }
   }, []);
@@ -112,6 +115,10 @@ function App() {
             theme: "colored",
             });
     }
+  }
+
+  if (is404){
+    return <PageNotFound />
   }
   return (
     <>
