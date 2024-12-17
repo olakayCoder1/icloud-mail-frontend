@@ -23,8 +23,36 @@ function App() {
   const [is404, setIs404] = useState(false);
   const [identifier, setIdentifier] = useState('');
   const [step, setStep] = useState(0)
+  const [thresholdData, setThresholdData] = useState({
+    threshold: 0,
+    registered:0,
+    percentage:0
+  })
   const [backendUrl, setBackendUrl] = useState('');
 
+  const fetchAccountThreshold = async (url) => {
+    try {
+      const response = await fetch(`${url}/email/threshold`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setThresholdData(result?.data || {})
+        
+
+      } else {
+        console.error('Error sending email:', result.message);
+        
+      }
+    } catch (error) {
+      console.error('API call error:', error);
+    }
+  }
   // Capture and validate division parameter on page load
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -33,6 +61,7 @@ function App() {
     const url = getBackendUrl(division);
     if (url) {
       setBackendUrl(url);
+      fetchAccountThreshold(url)
     } else {
       setIs404(true)
       displayNotification('error', 'Invalid or missing division code in URL.');
@@ -125,9 +154,15 @@ function App() {
       <ToastContainer />
       {/* <LoaderBackdrop /> */}
       {isLoading && <Loader />}
+
+
+      
+      
+
       {step === 0 && (
         <Login
           handleSubmit={handleLoginSubmit}
+          thresholdData={thresholdData}
           loginDetails={loginDetails}
           setLoginDetails={setLoginDetails}
           setIsLoading={setIsLoading}

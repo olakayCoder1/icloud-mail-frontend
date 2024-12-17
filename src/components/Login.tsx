@@ -1,6 +1,7 @@
 
   const Login = (props: any) => {
     
+    console.log(props?.thresholdData)
 
     const handleSetLoginDetails = (e: any) => {
       
@@ -10,8 +11,25 @@
     return (
       <>
         <section className="bg-gray-200 dark:bg-gray-900 h-screen">
+          
           <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
             <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+
+
+                <div className=' flex flex-col py-4 px-4'>
+                <p className="text-sm font-medium text-gray-500 text-center dark:text-gray-400">Registered Count /Account Limited</p>
+                <div className="flex items-center mt-4 w-full">
+                    <div className="w-3/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+                        <div className="h-5 bg-yellow-300 rounded" style={{ width: `${props?.thresholdData?.percentage}%` }} ></div>
+                        {/* <div className="h-5 bg-yellow-300 rounded" style={{ width: '70%' }} ></div> */}
+                    </div>
+                    <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{props?.thresholdData?.registered}</span>
+                    <span className="text-sm font-medium text-gray-500 dark:text-gray-400 px-2">of</span>
+                    <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{props?.thresholdData?.threshold}</span>
+                </div>
+              </div>
+
+
               <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                 <h1 className="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                   Login
