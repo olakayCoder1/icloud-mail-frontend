@@ -30,7 +30,7 @@ function App() {
   })
   const [backendUrl, setBackendUrl] = useState('');
 
-  const fetchAccountThreshold = async (url) => {
+  const fetchAccountThreshold = async (url: string) => {
     try {
       const response = await fetch(`${url}/email/threshold`, {
         method: 'GET',
